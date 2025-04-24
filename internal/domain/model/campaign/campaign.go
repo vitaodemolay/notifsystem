@@ -1,18 +1,19 @@
-package model
+package campaign
 
 import (
 	"errors"
 	"time"
 
 	"github.com/rs/xid"
+	model "github.com/vitaodemolay/notifsystem/internal/domain/model/contact"
 )
 
 type Campaign struct {
-	ID        string    `json:"id"`
-	Title     string    `json:"title"`
-	CreatedAt time.Time `json:"created_at"`
-	Content   string    `json:"content"`
-	Contacts  []Contact `json:"contacts"`
+	ID        string          `json:"id"`
+	Title     string          `json:"title"`
+	CreatedAt time.Time       `json:"created_at"`
+	Content   string          `json:"content"`
+	Contacts  []model.Contact `json:"contacts"`
 }
 
 func NewCampaign(title, content string, emails []string) (*Campaign, error) {
@@ -38,10 +39,10 @@ func NewCampaign(title, content string, emails []string) (*Campaign, error) {
 	}, nil
 }
 
-func createContacts(emails []string) ([]Contact, error) {
-	contacts := make([]Contact, len(emails))
+func createContacts(emails []string) ([]model.Contact, error) {
+	contacts := make([]model.Contact, len(emails))
 	for i, email := range emails {
-		contact, err := NewContact(email)
+		contact, err := model.NewContact(email)
 		if err != nil {
 			return nil, err
 		}
