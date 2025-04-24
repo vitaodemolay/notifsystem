@@ -67,12 +67,11 @@ func Test_CreateCampaign_WhenRequestIsValid(t *testing.T) {
 	suite := setup(t)
 	request := suite.Request
 	campaignService, _ := NewCampaignService(suite.Repo)
-	expectedCampaign, _ := MapToDomain(request)
 
 	suite.Repo.EXPECT().Save(gomock.Cond(func(c *campaign.Campaign) bool {
-		return c.Title == expectedCampaign.Title &&
-			c.Content == expectedCampaign.Content &&
-			len(c.Contacts) == len(expectedCampaign.Contacts) &&
+		return c.Title == request.Title &&
+			c.Content == request.Content &&
+			len(c.Contacts) == len(request.Emails) &&
 			c.ID != ""
 	})).Return(nil).Times(1)
 
