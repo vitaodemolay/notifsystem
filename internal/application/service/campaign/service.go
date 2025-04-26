@@ -5,6 +5,7 @@ import (
 
 	contract "github.com/vitaodemolay/notifsystem/internal/application/contract/campaign"
 	repository "github.com/vitaodemolay/notifsystem/internal/domain/repository/campaign"
+	internalerrors "github.com/vitaodemolay/notifsystem/pkg/internal-errors"
 )
 
 //go:generate go run go.uber.org/mock/mockgen -package=mock -destination=./mock/campaign.go . CampaignService
@@ -30,7 +31,7 @@ func (c *campaingService) CreateCampaign(request *contract.CreateCampaign) (stri
 	if campaign, err := MapToDomain(request); err != nil {
 		return "", err
 	} else if err = c.campaignRepository.Save(campaign); err != nil {
-		return "", err
+		return "", internalerrors.ErrInternal
 	} else {
 		return campaign.ID, nil
 	}

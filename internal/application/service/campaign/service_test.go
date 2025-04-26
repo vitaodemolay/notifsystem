@@ -8,6 +8,7 @@ import (
 	contract "github.com/vitaodemolay/notifsystem/internal/application/contract/campaign"
 	"github.com/vitaodemolay/notifsystem/internal/domain/model/campaign"
 	"github.com/vitaodemolay/notifsystem/internal/domain/repository/campaign/mock"
+	internalerrors "github.com/vitaodemolay/notifsystem/pkg/internal-errors"
 	"go.uber.org/mock/gomock"
 )
 
@@ -23,8 +24,8 @@ func setup(t *testing.T) *testSuitService {
 
 	return &testSuitService{
 		Request: &contract.CreateCampaign{
-			Title:   "title",
-			Content: "content",
+			Title:   "Campaign X of Test",
+			Content: "Body of Campaign X of Test",
 			Emails:  []string{"email1@test.com", "email2@test.com"},
 		},
 		Control: ctrl,
@@ -92,7 +93,7 @@ func Test_CreateCampaign_WhenRequestIsInvalid(t *testing.T) {
 	campaignID, err := campaignService.CreateCampaign(request)
 
 	assert.Equal(campaignID, "")
-	assert.Equal(err.Error(), "at least one email is required")
+	assert.Equal(err.Error(), "contacts is required with min 1")
 }
 
 func Test_CreateCampaign_WhenRepositoryFails(t *testing.T) {
@@ -100,12 +101,13 @@ func Test_CreateCampaign_WhenRepositoryFails(t *testing.T) {
 	suite := setup(t)
 	request := suite.Request
 	campaignService, _ := NewCampaignService(suite.Repo)
-	expectedError := "error to test"
+	testErrorMessage := "error to test"
 
-	suite.Repo.EXPECT().Save(gomock.Any()).Return(errors.New(expectedError)).Times(1)
+	suite.Repo.EXPECT().Save(gomock.Any()).Return(errors.New(testErrorMessage)).Times(1)
 
 	campaignID, err := campaignService.CreateCampaign(request)
 
 	assert.Equal(campaignID, "")
-	assert.Equal(err.Error(), expectedError)
+	assert.NotEqual(err.Error(), testErrorMessage)
+	assert.Equal(err.Error(), internalerrors.ErrInternal.Error())
 }

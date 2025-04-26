@@ -3,7 +3,7 @@ package contact
 import "errors"
 
 type Contact struct {
-	Email string `json:"email"`
+	Email string `json:"email" validate:"required,email"`
 }
 
 func NewContact(email string) (*Contact, error) {

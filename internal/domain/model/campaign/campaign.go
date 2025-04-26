@@ -1,42 +1,39 @@
 package campaign
 
 import (
-	"errors"
 	"time"
 
 	"github.com/rs/xid"
 	model "github.com/vitaodemolay/notifsystem/internal/domain/model/contact"
+	internalerrors "github.com/vitaodemolay/notifsystem/pkg/internal-errors"
 )
 
 type Campaign struct {
-	ID        string          `json:"id"`
-	Title     string          `json:"title"`
-	CreatedAt time.Time       `json:"created_at"`
-	Content   string          `json:"content"`
-	Contacts  []model.Contact `json:"contacts"`
+	ID        string          `json:"id" validate:"required"`
+	Title     string          `json:"title" validate:"min=10,max=30"`
+	CreatedAt time.Time       `json:"created_at" validate:"required"`
+	Content   string          `json:"content" validate:"min=10,max=2048"`
+	Contacts  []model.Contact `json:"contacts" validate:"min=1,dive"`
 }
 
 func NewCampaign(title, content string, emails []string) (*Campaign, error) {
-	if title == "" {
-		return nil, errors.New("title cannot be empty")
-	} else if content == "" {
-		return nil, errors.New("content cannot be empty")
-	} else if len(emails) == 0 {
-		return nil, errors.New("at least one email is required")
-	}
-
 	contacts, err := createContacts(emails)
 	if err != nil {
 		return nil, err
 	}
 
-	return &Campaign{
+	campain := &Campaign{
 		ID:        xid.New().String(),
 		Title:     title,
 		CreatedAt: time.Now(),
 		Content:   content,
 		Contacts:  contacts,
-	}, nil
+	}
+
+	if err := internalerrors.ValidateStruct(campain); err != nil {
+		return nil, err
+	}
+	return campain, nil
 }
 
 func createContacts(emails []string) ([]model.Contact, error) {
