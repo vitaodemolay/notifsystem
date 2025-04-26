@@ -15,8 +15,8 @@ func setuptestSuitMapper(t *testing.T) *testSuitMapper {
 
 	return &testSuitMapper{
 		Request: &contract.CreateCampaign{
-			Title:   "title",
-			Content: "content",
+			Title:   "Campaign X of Test",
+			Content: "Body of Campaign X of Test",
 			Emails:  []string{"email1@test.com", "email2@test.com"},
 		},
 	}
@@ -54,5 +54,5 @@ func Test_MapToDomain_WhenRequestIsInvalid(t *testing.T) {
 	campaign, err := MapToDomain(request)
 
 	assert.Nil(campaign)
-	assert.Equal(err.Error(), "at least one email is required")
+	assert.Equal(err.Error(), "contacts is required with min 1")
 }
