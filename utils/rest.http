@@ -1,0 +1,9 @@
+@baseurl=http://localhost:8080
+
+GET {{baseurl}}/ping
+
+###
+
+GET {{baseurl}}/api/v1/test
+
+###
