@@ -21,7 +21,7 @@ func Run(ctx context.Context) error {
 
 	// Set up the logger
 	logger := logger.NewLogger()
-	webServer.SetLogger(logger)
+	// webServer.SetLogger(logger)
 
 	logger.Info("Mounting Dependencies")
 
