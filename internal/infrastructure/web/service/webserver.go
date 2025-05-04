@@ -40,6 +40,7 @@ func (ws *WebServer) SetLogger(logger *httplog.Logger) {
 
 func (ws *WebServer) InitalizeRoutes(routers ...entrypoint.Router) {
 	ws.Router.Use(middleware.RequestID)
+	ws.Router.Use(middleware.RealIP)
 	ws.Router.Use(middleware.Recoverer)
 
 	if !ws.custonLoggerIsSet {
