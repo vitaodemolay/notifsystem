@@ -3,7 +3,11 @@ package basictest
 import (
 	"net/http"
 	"net/http/httptest"
+	"strings"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
+	"github.com/vitaodemolay/notifsystem/internal/infrastructure/web/entrypoint"
 )
 
 func TestController_Test(t *testing.T) {
@@ -15,7 +19,8 @@ func TestController_Test(t *testing.T) {
 	}
 
 	rr := httptest.NewRecorder()
-	handler := http.HandlerFunc(controller.Test)
+
+	handler := entrypoint.EndpointFunc(controller.Test).HandleError()
 
 	handler.ServeHTTP(rr, req)
 
@@ -23,8 +28,6 @@ func TestController_Test(t *testing.T) {
 		t.Errorf("handler returned wrong status code: got %v want %v", status, http.StatusOK)
 	}
 
-	expected := "Hello, this is a test!"
-	if rr.Body.String() != expected {
-		t.Errorf("handler returned unexpected body: got %v want %v", rr.Body.String(), expected)
-	}
+	assert.Equal(t, http.StatusOK, rr.Code, "Expected status code to be 200 OK")
+	assert.JSONEq(t, `{"message":"Hello, this is a test!"}`, strings.TrimSpace(rr.Body.String()), "Expected response body to match")
 }

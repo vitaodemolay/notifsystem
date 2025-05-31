@@ -16,6 +16,6 @@ type Router interface {
 type Route struct {
 	Method      string
 	Pattern     string
-	Handler     http.HandlerFunc
+	Handler     EndpointFunc
 	Middlewares func(http.Handler) http.Handler
 }
