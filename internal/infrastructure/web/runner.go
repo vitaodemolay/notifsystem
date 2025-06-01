@@ -25,9 +25,24 @@ func Run(ctx context.Context) error {
 
 	logger.Info("Mounting Dependencies")
 
-	// Get Controllers
-	entryPointContainer, err := container.NewEntryPointContainer()
+	// Initialize the infrastructure container
+	infraContainer, err := container.NewInfraContainer()
 	if err != nil {
+		logger.Error("Failed to initialize infrastructure container: " + err.Error())
+		return err
+	}
+
+	// Initialize the application container
+	applicationContainer, err := container.NewApplicationContainer(infraContainer)
+	if err != nil {
+		logger.Error("Failed to initialize application container: " + err.Error())
+		return err
+	}
+
+	// Get Controllers
+	entryPointContainer, err := container.NewEntryPointContainer(applicationContainer)
+	if err != nil {
+		logger.Error("Failed to initialize entrypoint container: " + err.Error())
 		return err
 	}
 	// Initialize routes

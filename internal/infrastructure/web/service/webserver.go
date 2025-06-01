@@ -58,7 +58,7 @@ func (ws *WebServer) InitalizeRoutes(routers ...entrypoint.Router) {
 					if route.Middlewares != nil {
 						r.Use(route.Middlewares)
 					}
-					r.Method(route.Method, route.Pattern, route.Handler)
+					r.Method(route.Method, route.Pattern, route.Handler.HandleError())
 				}
 			})
 		}
