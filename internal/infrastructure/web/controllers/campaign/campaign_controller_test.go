@@ -8,10 +8,13 @@ import (
 	"net/http/httptest"
 	"testing"
 
+	"github.com/go-chi/chi/v5"
 	"github.com/stretchr/testify/assert"
 	contract "github.com/vitaodemolay/notifsystem/internal/application/contract/campaign"
 	mapper "github.com/vitaodemolay/notifsystem/internal/application/service/campaign"
 	"github.com/vitaodemolay/notifsystem/internal/application/service/campaign/mock"
+	"github.com/vitaodemolay/notifsystem/internal/infrastructure/web/entrypoint"
+	internalerrors "github.com/vitaodemolay/notifsystem/pkg/internal-errors"
 	"go.uber.org/mock/gomock"
 )
 
@@ -91,9 +94,13 @@ func Test_GetRoutes(t *testing.T) {
 
 	// Assert
 	assert.NotEmpty(t, routes, "Expected routes to be returned")
-	assert.Len(t, routes, 2, "Expected two routes to be defined")
+	assert.Len(t, routes, 3, "Expected two routes to be defined")
 	assert.Equal(t, http.MethodGet, routes[0].Method, "Expected first route to be GET")
-	assert.Equal(t, http.MethodPost, routes[1].Method, "Expected second route to be POST")
+	assert.Equal(t, "/{id}", routes[0].Pattern, "Expected first route pattern to be /{id}")
+	assert.Equal(t, http.MethodGet, routes[1].Method, "Expected second route to be GET")
+	assert.Equal(t, "/", routes[1].Pattern, "Expected second route pattern to be /")
+	assert.Equal(t, http.MethodPost, routes[2].Method, "Expected second route to be POST")
+	assert.Equal(t, "/", routes[2].Pattern, "Expected second route pattern to be /")
 }
 
 func Test_CreateCampaing_when_body_is_nil(t *testing.T) {
@@ -130,4 +137,42 @@ func Test_CreateCampaing_when_body_Is_Valid(t *testing.T) {
 	assert.Equal(t, http.StatusCreated, statusCode, "Expected status code to be 201")
 	assert.NoError(t, err, "Expected no error")
 	assert.Equal(t, map[string]string{"campaign_id": expectedID}, object, "Expected response to contain campaign ID")
+}
+
+func Test_GetCampaignByID_when_id_is_empty(t *testing.T) {
+	// Arrange
+	suite := setup(t, nil, http.MethodGet)
+	suite.request = createRequest(http.MethodGet, "/v1/campaign/", nil)
+	suite.Service.EXPECT().GetCampaignByID(gomock.Any()).Return(nil, nil).Times(0)
+
+	// Act
+	object, statusCode, err := suite.Controller.GetCampaignByID(suite.response, suite.request)
+
+	// Assert
+	assert.Nil(t, object, "Expected object to be nil")
+	assert.Equal(t, 0, statusCode, "Expected status code to be 0")
+	assert.ErrorIs(t, err, internalerrors.ErrBadRequest, "Expected error to match")
+}
+
+func Test_GetCampaignByID_when_id_is_valid(t *testing.T) {
+	// Arrange
+	suite := setup(t, nil, http.MethodGet)
+	campaignID := "12345"
+	routepath := "/v1/campaign/"
+	suite.request = createRequest(http.MethodGet, routepath+campaignID, nil)
+	expectedCampaign := &contract.Campaign{ID: campaignID, Title: "Test Campaign"}
+	suite.Service.EXPECT().GetCampaignByID(campaignID).Return(expectedCampaign, nil).Times(1)
+	json, _ := json.Marshal(expectedCampaign)
+	expectedCampaignJson := string(json)
+
+	var handler entrypoint.EndpointFunc = suite.Controller.GetCampaignByID
+	r := chi.NewRouter()
+	r.Get(routepath+"{id}", handler.HandleError())
+
+	// Act
+	r.ServeHTTP(suite.response, suite.request)
+
+	// Assert
+	assert.Equal(t, http.StatusOK, suite.response.Code, "Expected status code to be 200")
+	assert.JSONEq(t, expectedCampaignJson, suite.response.Body.String(), "Expected response body to match campaign")
 }

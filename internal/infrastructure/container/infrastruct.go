@@ -11,13 +11,17 @@ type InfraContainer struct {
 }
 
 func NewInfraContainer() (*InfraContainer, error) {
-	campaignRepo := &fakeCampaignRepository{
-		repo: make(map[string]domain.Campaign),
-	}
+	campaignRepo := newfakeCampaignRepository()
 
 	return &InfraContainer{
 		CampaignRepository: campaignRepo,
 	}, nil
+}
+
+func newfakeCampaignRepository() repository.CampaignRepository {
+	return &fakeCampaignRepository{
+		repo: make(map[string]domain.Campaign),
+	}
 }
 
 type fakeCampaignRepository struct {

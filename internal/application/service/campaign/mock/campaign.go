@@ -54,3 +54,33 @@ func (mr *MockCampaignServiceMockRecorder) CreateCampaign(request any) *gomock.C
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateCampaign", reflect.TypeOf((*MockCampaignService)(nil).CreateCampaign), request)
 }
+
+// GetCampaignByID mocks base method.
+func (m *MockCampaignService) GetCampaignByID(id string) (*campaign.Campaign, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetCampaignByID", id)
+	ret0, _ := ret[0].(*campaign.Campaign)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetCampaignByID indicates an expected call of GetCampaignByID.
+func (mr *MockCampaignServiceMockRecorder) GetCampaignByID(id any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetCampaignByID", reflect.TypeOf((*MockCampaignService)(nil).GetCampaignByID), id)
+}
+
+// GetCampaigns mocks base method.
+func (m *MockCampaignService) GetCampaigns() ([]*campaign.Campaign, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetCampaigns")
+	ret0, _ := ret[0].([]*campaign.Campaign)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetCampaigns indicates an expected call of GetCampaigns.
+func (mr *MockCampaignServiceMockRecorder) GetCampaigns() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetCampaigns", reflect.TypeOf((*MockCampaignService)(nil).GetCampaigns))
+}

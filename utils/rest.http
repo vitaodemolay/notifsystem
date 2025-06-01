@@ -11,13 +11,15 @@ GET {{baseurl}}/api/v1/test
 GET {{baseurl}}/api/v1/campaign
 
 ###
+GET {{baseurl}}/api/v1/campaign/d0u7mnlroejl3scik6u0
+
+###
 POST {{baseurl}}/api/v1/campaign
 Content-Type: application/json
 
 {
-  "name": "Test Campaign",
-  "description": "This is a test campaign",
-  "startDate": "2023-10-01T00:00:00Z",
-  "endDate": "2023-10-31T23:59:59Z"
+  "title": "Test Campaign 3",
+  "content": "This is a test campaign 3",
+  "emails": ["joao@test.com", "jonny@test.com"]
 }
 ###
