@@ -12,8 +12,8 @@ type CampaignStatus string
 
 const (
 	Pending CampaignStatus = "Pending"
-	Started                = "Started"
-	Done 				   = "Done"
+	Started CampaignStatus = "Started"
+	Done    CampaignStatus = "Done"
 )
 
 type Campaign struct {
@@ -22,7 +22,7 @@ type Campaign struct {
 	CreatedAt time.Time       `json:"created_at" validate:"required"`
 	Content   string          `json:"content" validate:"min=10,max=2048"`
 	Contacts  []model.Contact `json:"contacts" validate:"min=1,dive"`
-	Status	  CampaingStatus
+	Status	  CampaignStatus
 }
 
 func NewCampaign(title, content string, emails []string) (*Campaign, error) {
