@@ -19,7 +19,7 @@ type Campaign struct {
 	ID        string    `json:"id" validate:"required"`
 	Title     string    `json:"title" validate:"min=10,max=30"`
 	CreatedAt time.Time `json:"created_at" validate:"required"`
-	Content   string    `json:"content" validate:"min=10,max=2048"`
+	Content   string    `json:"content" validate:"min=10,max=1024"`
 	Contacts  []Contact `json:"contacts" validate:"min=1,dive"`
 	Status    CampaignStatus
 }
