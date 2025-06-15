@@ -4,16 +4,15 @@ import (
 	"time"
 
 	"github.com/rs/xid"
-	model "github.com/vitaodemolay/notifsystem/internal/domain/model/contact"
 	internalerrors "github.com/vitaodemolay/notifsystem/pkg/internal-errors"
 )
 
 type Campaign struct {
-	ID        string          `json:"id" validate:"required"`
-	Title     string          `json:"title" validate:"min=10,max=30"`
-	CreatedAt time.Time       `json:"created_at" validate:"required"`
-	Content   string          `json:"content" validate:"min=10,max=2048"`
-	Contacts  []model.Contact `json:"contacts" validate:"min=1,dive"`
+	ID        string    `json:"id" validate:"required"`
+	Title     string    `json:"title" validate:"min=10,max=30"`
+	CreatedAt time.Time `json:"created_at" validate:"required"`
+	Content   string    `json:"content" validate:"min=10,max=1024"`
+	Contacts  []Contact `json:"contacts" validate:"min=1,dive"`
 }
 
 func NewCampaign(title, content string, emails []string) (*Campaign, error) {
@@ -36,10 +35,10 @@ func NewCampaign(title, content string, emails []string) (*Campaign, error) {
 	return campain, nil
 }
 
-func createContacts(emails []string) ([]model.Contact, error) {
-	contacts := make([]model.Contact, len(emails))
+func createContacts(emails []string) ([]Contact, error) {
+	contacts := make([]Contact, len(emails))
 	for i, email := range emails {
-		contact, err := model.NewContact(email)
+		contact, err := newContact(email)
 		if err != nil {
 			return nil, err
 		}

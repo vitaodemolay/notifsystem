@@ -8,7 +8,6 @@ import (
 	"github.com/stretchr/testify/assert"
 	contract "github.com/vitaodemolay/notifsystem/internal/application/contract/campaign"
 	"github.com/vitaodemolay/notifsystem/internal/domain/model/campaign"
-	"github.com/vitaodemolay/notifsystem/internal/domain/model/contact"
 	"github.com/vitaodemolay/notifsystem/internal/domain/repository/campaign/mock"
 	internalerrors "github.com/vitaodemolay/notifsystem/pkg/internal-errors"
 	"go.uber.org/mock/gomock"
@@ -179,14 +178,14 @@ func Test_GetCampaigns_WhenRepositoryReturnsList(t *testing.T) {
 			Title:     "Campaign 1",
 			CreatedAt: time.Now(),
 			Content:   "Content 1",
-			Contacts:  []contact.Contact{{Email: "email1@test.com"}},
+			Contacts:  []campaign.Contact{{Email: "email1@test.com"}},
 		},
 		{
 			ID:        "2",
 			Title:     "Campaign 2",
 			CreatedAt: time.Now(),
 			Content:   "Content 2",
-			Contacts:  []contact.Contact{{Email: "email2@test.com"}},
+			Contacts:  []campaign.Contact{{Email: "email2@test.com"}},
 		},
 	}
 
@@ -269,7 +268,7 @@ func Test_GetCampaignByID_WhenRepositoryReturnsCampaign(t *testing.T) {
 		Title:     "Campaign 1",
 		CreatedAt: time.Now(),
 		Content:   "Content 1",
-		Contacts:  []contact.Contact{{Email: "email1@test.com"}},
+		Contacts:  []campaign.Contact{{Email: "email1@test.com"}},
 	}
 	suite.Repo.EXPECT().FindByID("1").Return(expectedCampaign, nil).Times(1)
 

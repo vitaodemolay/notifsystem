@@ -86,7 +86,7 @@ func Test_NewCampaign_ContentTooLong(t *testing.T) {
 	campaign, err := NewCampaign(title, faker.Lorem().Sentence(2000), contacts)
 
 	assert.Nil(campaign)
-	assert.Equal(err.Error(), "content is required with max 2048")
+	assert.Equal(err.Error(), "content is required with max 1024")
 }
 
 func Test_NewCampaign_ContentTooShort(t *testing.T) {

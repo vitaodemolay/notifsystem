@@ -1,0 +1,15 @@
+networks:
+  notifsystem:
+    driver: bridge
+services:
+  db:
+    container_name: notifsystem_db
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: teste
+      POSTGRES_PASSWORD: PassW0rd
+      POSTGRES_DB: notifsystemdb
+    ports:
+      - "5432:5432"
+    networks:
+      - notifsystem

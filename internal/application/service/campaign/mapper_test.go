@@ -7,7 +7,6 @@ import (
 	"github.com/stretchr/testify/assert"
 	contract "github.com/vitaodemolay/notifsystem/internal/application/contract/campaign"
 	model "github.com/vitaodemolay/notifsystem/internal/domain/model/campaign"
-	"github.com/vitaodemolay/notifsystem/internal/domain/model/contact"
 )
 
 func fakeCreateCampaing() *contract.CreateCampaign {
@@ -25,7 +24,7 @@ func fakeDomainCampaign() *model.Campaign {
 		Title:     "Campaign X of Test",
 		Content:   "Body of Campaign X of Test",
 		CreatedAt: create,
-		Contacts:  []contact.Contact{{Email: "teste1@test.com"}},
+		Contacts:  []model.Contact{{Email: "teste1@test.com"}},
 	}
 	return campaign
 }
