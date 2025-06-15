@@ -128,5 +128,5 @@ func Test_NewCampaign_StatusMustBePending(t *testing.T) {
 	assert := assert.New(t)
 
 	campaign, _ := NewCampaign(title, content, contacts)
-	assert.Equal(Pending, campaign.Status)
+	assert.Equal(pendingStatus, campaign.GetActualStatus().Value)
 }

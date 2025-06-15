@@ -1,9 +1,15 @@
 package campaign
 
-import "errors"
+import (
+	"errors"
+
+	"github.com/rs/xid"
+)
 
 type Contact struct {
-	Email string `json:"email" validate:"required,email"`
+	ID         string `json:"id"`
+	Email      string `json:"email" validate:"required,email"`
+	CampaignID string `json:"campaign_id"`
 }
 
 func newContact(email string) (*Contact, error) {
@@ -12,6 +18,7 @@ func newContact(email string) (*Contact, error) {
 	}
 
 	return &Contact{
+		ID:    xid.New().String(),
 		Email: email,
 	}, nil
 }
