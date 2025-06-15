@@ -11,7 +11,7 @@ GET {{baseurl}}/api/v1/test
 GET {{baseurl}}/api/v1/campaign
 
 ###
-GET {{baseurl}}/api/v1/campaign/d0u7mnlroejl3scik6u0
+GET {{baseurl}}/api/v1/campaign/d17gr1lroejs1qbe7700
 
 ###
 POST {{baseurl}}/api/v1/campaign

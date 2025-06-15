@@ -13,6 +13,7 @@ func Run(ctx context.Context) error {
 
 	// Set the port for the web server (TODO: make this configurable)
 	port := ":8080"
+	connectionString := "host=localhost user=teste password=PassW0rd dbname=notifsystemdb port=5432 sslmode=disable" // Replace with your actual connection string
 
 	webServer, err := service.CreateWebServer(port)
 	if err != nil {
@@ -26,7 +27,7 @@ func Run(ctx context.Context) error {
 	logger.Info("Mounting Dependencies")
 
 	// Initialize the infrastructure container
-	infraContainer, err := container.NewInfraContainer()
+	infraContainer, err := container.NewInfraContainer(connectionString)
 	if err != nil {
 		logger.Error("Failed to initialize infrastructure container: " + err.Error())
 		return err

@@ -30,6 +30,10 @@ func MapToContract(campaign *model.Campaign) *contract.Campaign {
 		CreatedAt: campaign.CreatedAt.Format(time.RFC3339),
 		Emails:    make([]string, len(campaign.Contacts)),
 	}
+	status := campaign.GetActualStatus()
+	contract.Status = string(status.Value)
+	contract.UpdatedAt = status.CreatedAt.Format(time.RFC3339)
+
 	for i, contact := range campaign.Contacts {
 		contract.Emails[i] = contact.Email
 	}

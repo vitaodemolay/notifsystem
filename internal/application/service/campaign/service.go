@@ -32,7 +32,7 @@ func NewCampaignService(campaignRepository repository.CampaignRepository) (Campa
 func (c *campaingService) CreateCampaign(request *contract.CreateCampaign) (string, error) {
 	if campaign, err := MapToDomain(request); err != nil {
 		return "", err
-	} else if err = c.campaignRepository.Save(campaign); err != nil {
+	} else if err = c.campaignRepository.Create(campaign); err != nil {
 		return "", internalerrors.ErrInternal
 	} else {
 		return campaign.ID, nil

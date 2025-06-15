@@ -7,7 +7,6 @@ import (
 	"github.com/stretchr/testify/assert"
 	contract "github.com/vitaodemolay/notifsystem/internal/application/contract/campaign"
 	model "github.com/vitaodemolay/notifsystem/internal/domain/model/campaign"
-	"github.com/vitaodemolay/notifsystem/internal/domain/model/contact"
 )
 
 func fakeCreateCampaing() *contract.CreateCampaign {
@@ -25,7 +24,7 @@ func fakeDomainCampaign() *model.Campaign {
 		Title:     "Campaign X of Test",
 		Content:   "Body of Campaign X of Test",
 		CreatedAt: create,
-		Contacts:  []contact.Contact{{Email: "teste1@test.com"}},
+		Contacts:  []model.Contact{{Email: "teste1@test.com"}},
 	}
 	return campaign
 }
@@ -96,6 +95,7 @@ func Test_MapToContract_WhenCampaignIsValid(t *testing.T) {
 	// Arrange
 	assert := assert.New(t)
 	campaign := fakeDomainCampaign()
+	status := campaign.GetActualStatus()
 
 	// Act
 	contract := MapToContract(campaign)
@@ -107,6 +107,8 @@ func Test_MapToContract_WhenCampaignIsValid(t *testing.T) {
 	assert.Equal(contract.Content, campaign.Content)
 	assert.Equal(contract.CreatedAt, campaign.CreatedAt.Format(time.RFC3339))
 	assert.Equal(len(contract.Emails), len(campaign.Contacts))
+	assert.Equal(contract.Status, string(status.Value))
+	assert.Equal(contract.UpdatedAt, status.CreatedAt.Format(time.RFC3339))
 }
 
 func Test_MapToContractList_WhenCampaignsIsNil(t *testing.T) {

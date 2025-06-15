@@ -8,7 +8,6 @@ import (
 	"github.com/stretchr/testify/assert"
 	contract "github.com/vitaodemolay/notifsystem/internal/application/contract/campaign"
 	"github.com/vitaodemolay/notifsystem/internal/domain/model/campaign"
-	"github.com/vitaodemolay/notifsystem/internal/domain/model/contact"
 	"github.com/vitaodemolay/notifsystem/internal/domain/repository/campaign/mock"
 	internalerrors "github.com/vitaodemolay/notifsystem/pkg/internal-errors"
 	"go.uber.org/mock/gomock"
@@ -81,7 +80,7 @@ func Test_CreateCampaign_WhenRequestIsValid(t *testing.T) {
 	request := suite.Request
 	campaignService, _ := NewCampaignService(suite.Repo)
 
-	suite.Repo.EXPECT().Save(gomock.Cond(func(c *campaign.Campaign) bool {
+	suite.Repo.EXPECT().Create(gomock.Cond(func(c *campaign.Campaign) bool {
 		return c.Title == request.Title &&
 			c.Content == request.Content &&
 			len(c.Contacts) == len(request.Emails) &&
@@ -121,7 +120,7 @@ func Test_CreateCampaign_WhenRepositoryFails(t *testing.T) {
 	campaignService, _ := NewCampaignService(suite.Repo)
 	testErrorMessage := "error to test"
 
-	suite.Repo.EXPECT().Save(gomock.Any()).Return(errors.New(testErrorMessage)).Times(1)
+	suite.Repo.EXPECT().Create(gomock.Any()).Return(errors.New(testErrorMessage)).Times(1)
 
 	// Act
 	campaignID, err := campaignService.CreateCampaign(request)
@@ -179,14 +178,14 @@ func Test_GetCampaigns_WhenRepositoryReturnsList(t *testing.T) {
 			Title:     "Campaign 1",
 			CreatedAt: time.Now(),
 			Content:   "Content 1",
-			Contacts:  []contact.Contact{{Email: "email1@test.com"}},
+			Contacts:  []campaign.Contact{{Email: "email1@test.com"}},
 		},
 		{
 			ID:        "2",
 			Title:     "Campaign 2",
 			CreatedAt: time.Now(),
 			Content:   "Content 2",
-			Contacts:  []contact.Contact{{Email: "email2@test.com"}},
+			Contacts:  []campaign.Contact{{Email: "email2@test.com"}},
 		},
 	}
 
@@ -269,7 +268,7 @@ func Test_GetCampaignByID_WhenRepositoryReturnsCampaign(t *testing.T) {
 		Title:     "Campaign 1",
 		CreatedAt: time.Now(),
 		Content:   "Content 1",
-		Contacts:  []contact.Contact{{Email: "email1@test.com"}},
+		Contacts:  []campaign.Contact{{Email: "email1@test.com"}},
 	}
 	suite.Repo.EXPECT().FindByID("1").Return(expectedCampaign, nil).Times(1)
 
