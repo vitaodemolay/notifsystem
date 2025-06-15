@@ -80,7 +80,7 @@ func Test_CreateCampaign_WhenRequestIsValid(t *testing.T) {
 	request := suite.Request
 	campaignService, _ := NewCampaignService(suite.Repo)
 
-	suite.Repo.EXPECT().Save(gomock.Cond(func(c *campaign.Campaign) bool {
+	suite.Repo.EXPECT().Create(gomock.Cond(func(c *campaign.Campaign) bool {
 		return c.Title == request.Title &&
 			c.Content == request.Content &&
 			len(c.Contacts) == len(request.Emails) &&
@@ -120,7 +120,7 @@ func Test_CreateCampaign_WhenRepositoryFails(t *testing.T) {
 	campaignService, _ := NewCampaignService(suite.Repo)
 	testErrorMessage := "error to test"
 
-	suite.Repo.EXPECT().Save(gomock.Any()).Return(errors.New(testErrorMessage)).Times(1)
+	suite.Repo.EXPECT().Create(gomock.Any()).Return(errors.New(testErrorMessage)).Times(1)
 
 	// Act
 	campaignID, err := campaignService.CreateCampaign(request)

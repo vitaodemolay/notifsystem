@@ -40,6 +40,20 @@ func (m *MockCampaignRepository) EXPECT() *MockCampaignRepositoryMockRecorder {
 	return m.recorder
 }
 
+// Create mocks base method.
+func (m *MockCampaignRepository) Create(arg0 *campaign.Campaign) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Create", arg0)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// Create indicates an expected call of Create.
+func (mr *MockCampaignRepositoryMockRecorder) Create(arg0 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Create", reflect.TypeOf((*MockCampaignRepository)(nil).Create), arg0)
+}
+
 // FindAll mocks base method.
 func (m *MockCampaignRepository) FindAll() ([]campaign.Campaign, error) {
 	m.ctrl.T.Helper()
@@ -68,18 +82,4 @@ func (m *MockCampaignRepository) FindByID(id string) (*campaign.Campaign, error)
 func (mr *MockCampaignRepositoryMockRecorder) FindByID(id any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindByID", reflect.TypeOf((*MockCampaignRepository)(nil).FindByID), id)
-}
-
-// Save mocks base method.
-func (m *MockCampaignRepository) Save(arg0 *campaign.Campaign) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Save", arg0)
-	ret0, _ := ret[0].(error)
-	return ret0
-}
-
-// Save indicates an expected call of Save.
-func (mr *MockCampaignRepositoryMockRecorder) Save(arg0 any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Save", reflect.TypeOf((*MockCampaignRepository)(nil).Save), arg0)
 }

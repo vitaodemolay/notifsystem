@@ -18,9 +18,9 @@ const (
 var ErrInvalidCampaignStatus error = errors.New("invalid campaign status")
 
 type CampaignStatus struct {
-	ID         uint               `json:"id"`
-	Value      CampaignStatusType `json:"value"`
-	CampaignID string             `json:"campaign_id"`
+	ID         uint               `json:"id" gorm:"primaryKey"`
+	Value      CampaignStatusType `json:"value" gorm:"size:15"`
+	CampaignID string             `json:"campaign_id" gorm:"size:50"`
 	CreatedAt  time.Time          `json:"created_at"`
 }
 

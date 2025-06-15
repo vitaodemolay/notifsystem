@@ -95,6 +95,7 @@ func Test_MapToContract_WhenCampaignIsValid(t *testing.T) {
 	// Arrange
 	assert := assert.New(t)
 	campaign := fakeDomainCampaign()
+	status := campaign.GetActualStatus()
 
 	// Act
 	contract := MapToContract(campaign)
@@ -106,6 +107,8 @@ func Test_MapToContract_WhenCampaignIsValid(t *testing.T) {
 	assert.Equal(contract.Content, campaign.Content)
 	assert.Equal(contract.CreatedAt, campaign.CreatedAt.Format(time.RFC3339))
 	assert.Equal(len(contract.Emails), len(campaign.Contacts))
+	assert.Equal(contract.Status, string(status.Value))
+	assert.Equal(contract.UpdatedAt, status.CreatedAt.Format(time.RFC3339))
 }
 
 func Test_MapToContractList_WhenCampaignsIsNil(t *testing.T) {
