@@ -11,11 +11,11 @@ const (
 type Router interface {
 	GetRoutes() []Route
 	Path() string
+	Middleware() func(http.Handler) http.Handler
 }
 
 type Route struct {
-	Method      string
-	Pattern     string
-	Handler     EndpointFunc
-	Middlewares func(http.Handler) http.Handler
+	Method  string
+	Pattern string
+	Handler EndpointFunc
 }

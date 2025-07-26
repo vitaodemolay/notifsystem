@@ -22,12 +22,15 @@ func (c *Controller) Path() string {
 func (c *Controller) GetRoutes() []entrypoint.Route {
 	return []entrypoint.Route{
 		{
-			Method:      http.MethodGet,
-			Pattern:     "/",
-			Handler:     c.Test,
-			Middlewares: c.DefineContextMiddlerware,
+			Method:  http.MethodGet,
+			Pattern: "/",
+			Handler: c.Test,
 		},
 	}
+}
+
+func (c *Controller) Middleware() func(http.Handler) http.Handler {
+	return c.DefineContextMiddlerware
 }
 
 func (c *Controller) Test(w http.ResponseWriter, r *http.Request) (any, int, error) {

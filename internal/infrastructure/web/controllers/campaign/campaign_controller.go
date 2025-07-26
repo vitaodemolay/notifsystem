@@ -45,6 +45,10 @@ func (c *Controller) GetRoutes() []entrypoint.Route {
 	}
 }
 
+func (c *Controller) Middleware() func(http.Handler) http.Handler {
+	return entrypoint.Auth
+}
+
 func (c *Controller) GetCampaignByID(w http.ResponseWriter, r *http.Request) (any, int, error) {
 	campaignID := chi.URLParam(r, "id")
 	if campaignID == "" {

@@ -7,8 +7,8 @@ import (
 )
 
 type EntryPoint struct {
-	BasicTest *basictest.Controller
 	Campaign  *campaign.Controller
+	BasicTest *basictest.Controller
 }
 
 func NewEntryPointContainer(appContainer *ApplicationContainer) (*EntryPoint, error) {
