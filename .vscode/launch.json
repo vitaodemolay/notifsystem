@@ -10,14 +10,11 @@
             "request": "launch",
             "mode": "debug",
             "program": "cmd/api/main.go",
-            // "dlvLoadConfig": {
-            //     "followPointers": true,
-            //     "maxVariableRecurse": 1,
-            //     "maxStringLen": 512,
-            //     "maxArrayValues": 64,
-            //     "maxStructFields": -1
-            // },
             "dlvFlags": ["--check-go-version=false"],
+            "env": {
+                "GO_ENV": "development",
+                "CONFIG_PATH": "${workspaceFolder}/resources/local-configs.yml"
+            }
         }
     ]
 }

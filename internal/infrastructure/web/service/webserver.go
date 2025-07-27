@@ -13,7 +13,7 @@ import (
 type WebServer struct {
 	Port              string
 	Router            *chi.Mux
-	custonLoggerIsSet bool
+	customLoggerIsSet bool
 }
 
 func CreateWebServer(port string) (*WebServer, error) {
@@ -25,7 +25,7 @@ func CreateWebServer(port string) (*WebServer, error) {
 	return &WebServer{
 		Port:              port,
 		Router:            router,
-		custonLoggerIsSet: false,
+		customLoggerIsSet: false,
 	}, nil
 }
 
@@ -35,7 +35,7 @@ func (ws *WebServer) Start() error {
 
 func (ws *WebServer) SetLogger(logger *httplog.Logger) {
 	ws.Router.Use(httplog.RequestLogger(logger))
-	ws.custonLoggerIsSet = true
+	ws.customLoggerIsSet = true
 }
 
 func (ws *WebServer) InitalizeRoutes(routers ...entrypoint.Router) {
@@ -43,7 +43,7 @@ func (ws *WebServer) InitalizeRoutes(routers ...entrypoint.Router) {
 	ws.Router.Use(middleware.RealIP)
 	ws.Router.Use(middleware.Recoverer)
 
-	if !ws.custonLoggerIsSet {
+	if !ws.customLoggerIsSet {
 		ws.Router.Use(middleware.Logger)
 	}
 
