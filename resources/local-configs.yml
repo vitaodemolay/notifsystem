@@ -1,0 +1,15 @@
+server:
+  port: 8080
+  host: localhost
+  custom_logger_enabled: false
+database:
+  host: localhost
+  port: 5432
+  user: teste
+  password: PassW0rd
+  dbname: notifsystemdb
+  sslmode: disable
+identity_provider:
+  client_id: notifysystem
+  redirect_uri: http://localhost:8070/realms/dummy-provider
+  token_type: Bearer

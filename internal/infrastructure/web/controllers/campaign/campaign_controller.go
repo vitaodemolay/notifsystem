@@ -12,12 +12,14 @@ import (
 )
 
 type Controller struct {
-	service campaign.CampaignService
+	identityProvider entrypoint.IdentityProvider
+	service          campaign.CampaignService
 }
 
-func NewController(service campaign.CampaignService) *Controller {
+func NewController(service campaign.CampaignService, identityProvider entrypoint.IdentityProvider) *Controller {
 	return &Controller{
-		service: service,
+		service:          service,
+		identityProvider: identityProvider,
 	}
 }
 
@@ -45,8 +47,8 @@ func (c *Controller) GetRoutes() []entrypoint.Route {
 	}
 }
 
-func (c *Controller) Middleware() func(http.Handler) http.Handler {
-	return entrypoint.Auth
+func (c *Controller) Middleware() func(next http.Handler) http.Handler {
+	return c.identityProvider.Auth
 }
 
 func (c *Controller) GetCampaignByID(w http.ResponseWriter, r *http.Request) (any, int, error) {

@@ -8,11 +8,16 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+func createIdentityProvider() IdentityProvider {
+	return NewIdentityProvider("test-client-id", "http://localhost:9980/callback", "Bearer")
+}
+
 func TestAuthMiddleware_NoToken(t *testing.T) {
 	req := httptest.NewRequest(http.MethodGet, "/protected", nil)
 	rr := httptest.NewRecorder()
+	provider := createIdentityProvider()
 
-	handler := Auth(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	handler := provider.Auth(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
 	}))
 
@@ -26,8 +31,9 @@ func TestAuthMiddleware_InvalidToken(t *testing.T) {
 	req := httptest.NewRequest(http.MethodGet, "/protected", nil)
 	req.Header.Set("Authorization", "Bearer invalidtoken")
 	rr := httptest.NewRecorder()
+	provider := createIdentityProvider()
 
-	handler := Auth(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	handler := provider.Auth(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
 	}))
 

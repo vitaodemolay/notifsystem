@@ -11,10 +11,12 @@ type EntryPoint struct {
 	BasicTest *basictest.Controller
 }
 
-func NewEntryPointContainer(appContainer *ApplicationContainer) (*EntryPoint, error) {
+func NewEntryPointContainer(appContainer *ApplicationContainer, clientId, redirectUri, tokenType string) (*EntryPoint, error) {
+	idProvider := entrypoint.NewIdentityProvider(clientId, redirectUri, tokenType)
+
 	return &EntryPoint{
 		BasicTest: basictest.NewController(),
-		Campaign:  campaign.NewController(appContainer.CampaignService),
+		Campaign:  campaign.NewController(appContainer.CampaignService, idProvider),
 	}, nil
 }
 

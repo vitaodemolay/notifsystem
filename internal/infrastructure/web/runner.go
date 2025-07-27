@@ -3,18 +3,22 @@ package web
 import (
 	"context"
 
+	"github.com/vitaodemolay/notifsystem/internal/infrastructure/configs"
 	"github.com/vitaodemolay/notifsystem/internal/infrastructure/container"
 	"github.com/vitaodemolay/notifsystem/internal/infrastructure/logger"
 	"github.com/vitaodemolay/notifsystem/internal/infrastructure/web/service"
+	loader "github.com/vitaodemolay/notifsystem/pkg/conf-loader"
 )
 
 func Run(ctx context.Context) error {
+	//Load configurations
+	configs, err := loader.LoadConfig[configs.Config]()
+	if err != nil {
+		return err
+	}
+
 	// Initialize the web server
-
-	// Set the port for the web server (TODO: make this configurable)
-	port := ":8080"
-	connectionString := "host=localhost user=teste password=PassW0rd dbname=notifsystemdb port=5432 sslmode=disable" // Replace with your actual connection string
-
+	port := ":" + configs.GetPort()
 	webServer, err := service.CreateWebServer(port)
 	if err != nil {
 		return err
@@ -22,12 +26,14 @@ func Run(ctx context.Context) error {
 
 	// Set up the logger
 	logger := logger.NewLogger()
-	// webServer.SetLogger(logger)
+	if configs.IsCustomLoggerEnabled() {
+		webServer.SetLogger(logger)
+	}
 
 	logger.Info("Mounting Dependencies")
 
 	// Initialize the infrastructure container
-	infraContainer, err := container.NewInfraContainer(connectionString)
+	infraContainer, err := container.NewInfraContainer(configs.GetDatabaseConnectionString())
 	if err != nil {
 		logger.Error("Failed to initialize infrastructure container: " + err.Error())
 		return err
@@ -41,7 +47,12 @@ func Run(ctx context.Context) error {
 	}
 
 	// Get Controllers
-	entryPointContainer, err := container.NewEntryPointContainer(applicationContainer)
+	entryPointContainer, err := container.NewEntryPointContainer(
+		applicationContainer,
+		configs.GetIdentityProviderClientID(),
+		configs.GetIdentityProviderRedirectURL(),
+		configs.GetIdentityProviderTokenType(),
+	)
 	if err != nil {
 		logger.Error("Failed to initialize entrypoint container: " + err.Error())
 		return err
@@ -50,6 +61,6 @@ func Run(ctx context.Context) error {
 	webServer.InitalizeRoutes(entryPointContainer.GetControllers()...)
 
 	// Start the server
-	logger.Info("Starting server on port " + port)
+	logger.Info("Starting server on host http://" + configs.GetHost() + port)
 	return webServer.Start()
 }

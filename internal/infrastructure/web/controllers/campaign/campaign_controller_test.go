@@ -14,6 +14,7 @@ import (
 	mapper "github.com/vitaodemolay/notifsystem/internal/application/service/campaign"
 	"github.com/vitaodemolay/notifsystem/internal/application/service/campaign/mock"
 	"github.com/vitaodemolay/notifsystem/internal/infrastructure/web/entrypoint"
+	prov "github.com/vitaodemolay/notifsystem/internal/infrastructure/web/entrypoint/mock"
 	internalerrors "github.com/vitaodemolay/notifsystem/pkg/internal-errors"
 	"go.uber.org/mock/gomock"
 )
@@ -22,6 +23,7 @@ type testSuite struct {
 	Request    *contract.CreateCampaign
 	Control    *gomock.Controller
 	Service    *mock.MockCampaignService
+	Provider   *prov.MockIdentityProvider
 	Controller *Controller
 	request    *http.Request
 	response   *httptest.ResponseRecorder
@@ -46,14 +48,16 @@ func createRequest(method string, path string, body any) *http.Request {
 func setup(t *testing.T, requestBody *contract.CreateCampaign, method string) *testSuite {
 	ctrl := gomock.NewController(t)
 	service := mock.NewMockCampaignService(ctrl)
+	provider := prov.NewMockIdentityProvider(ctrl)
 
 	req := createRequest(method, "/v1/campaign", requestBody)
 	w := httptest.NewRecorder()
 
 	return &testSuite{
-		Request: requestBody,
-		Control: ctrl,
-		Service: service,
+		Request:  requestBody,
+		Control:  ctrl,
+		Service:  service,
+		Provider: provider,
 		Controller: &Controller{
 			service: service,
 		},
@@ -67,7 +71,7 @@ func Test_NewController(t *testing.T) {
 	suite := setup(t, nil, http.MethodGet)
 
 	// Act
-	controller := NewController(suite.Service)
+	controller := NewController(suite.Service, suite.Provider)
 
 	// Assert
 	assert.NotNil(t, controller, "Expected controller to be created")
