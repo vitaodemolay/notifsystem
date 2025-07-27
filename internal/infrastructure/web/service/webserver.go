@@ -54,10 +54,10 @@ func (ws *WebServer) InitalizeRoutes(routers ...entrypoint.Router) {
 	ws.Router.Route(entrypoint.BasePath, func(r chi.Router) {
 		for _, router := range routers {
 			r.Route(router.Path(), func(r chi.Router) {
+				if router.Middleware() != nil {
+					r.Use(router.Middleware())
+				}
 				for _, route := range router.GetRoutes() {
-					if route.Middlewares != nil {
-						r.Use(route.Middlewares)
-					}
 					r.Method(route.Method, route.Pattern, route.Handler.HandleError())
 				}
 			})
